@@ -3,7 +3,7 @@ require 'pry'
 
 describe "Dog" do
 
-  let(:teddy) {Dog.new("Teddy", "cockapoo")}
+  let(:teddy) {Dog.new(name: "Teddy", breed: "cockapoo")}
 
   before(:each) do
     DB[:conn].execute("DROP TABLE IF EXISTS dogs")
@@ -19,7 +19,7 @@ describe "Dog" do
 
   describe "attributes" do
     it 'has a name and a breed' do
-      dog = Dog.new("Fido", "lab")
+      dog = Dog.new(name: "Fido", breed: "lab")
       expect(dog.name).to eq("Fido")
       expect(dog.breed).to eq("lab")
     end
@@ -65,6 +65,7 @@ describe "Dog" do
       dog = teddy.save
 
       expect(DB[:conn].execute("SELECT * FROM dogs WHERE id = 1")).to eq([[1, "Teddy", "cockapoo"]])
+      expect(dog.id).to eq(1)
     end
   end
 
@@ -104,10 +105,10 @@ describe "Dog" do
 
   describe '.find_or_create_by' do
     it 'creates an instance of a dog if it does not already exist' do
-      dog1 = Dog.create(name: 'teddy', breed: 'cockapoo')
+      dog1 = Dog.create(name: 'teddy', breed: 'lab')
       dog2 = Dog.find_or_create_by(name: 'teddy', breed: 'cockapoo')
 
-      expect(dog2.id).to eq(dog1.id)
+      expect(dog2.id).to_not eq(dog1.id)
     end
     it 'when two dogs have the same name and different breed, it returns the correct dog' do
       dog1 = Dog.create(name: 'teddy', breed: 'cockapoo')
