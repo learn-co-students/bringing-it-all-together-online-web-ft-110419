@@ -71,8 +71,10 @@ attr_accessor :name, :breed, :id
         sql = "SELECT * FROM dogs WHERE name = ? AND breed = ?"
         dog_data = DB[:conn].execute(sql, dog[:name], dog[:breed])
           if !dog_data.empty?
-            dog_exist = {id: dog_data[0][0], name: dog_data[0][1], breed: dog_data[0][2]}
-            dog_data = self.new(dog_exist)
+            # dog_exist = {id: dog_data[0][0], name: dog_data[0][1], breed: dog_data[0][2]}
+            # dog_data = self.new(dog_exist)
+            # or
+            dog_data = self.new_from_db(dog_data[0])
           else
             dog_data = self.create(dog)
             find_by_id(dog_data.id)
